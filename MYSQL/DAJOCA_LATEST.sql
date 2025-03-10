@@ -1,0 +1,463 @@
+DROP DATABASE IF EXISTS DAJOCA;
+CREATE DATABASE DAJOCA;
+USE DAJOCA;
+
+CREATE TABLE TRABAJADOR(
+IDTRABAJADOR INT,
+NOMBRE VARCHAR(40),
+DNI CHAR(8),
+DIRECCION VARCHAR(30),
+CONSTRAINT PK1 PRIMARY KEY (IDTRABAJADOR)
+);
+
+CREATE TABLE INVENTARIO(
+IDINVENTARIO INT,
+COD INT,
+ESTANTERIA INT,
+ALMACEN INT,
+CONSTRAINT PK2 PRIMARY KEY (IDINVENTARIO)
+);
+
+CREATE TABLE SEDE(
+IDSEDE INT,
+DIRECCION VARCHAR(30),
+ESPECIALIZACION VARCHAR(20),
+CONSTRAINT PK3 PRIMARY KEY (IDSEDE)
+);
+
+CREATE TABLE CLIENTES(
+IDCLIENTE INT,
+DNI CHAR(8),
+APELLIDOS VARCHAR(40),
+NOMBRE VARCHAR(40),
+CONSTRAINT PK4 PRIMARY KEY (IDCLIENTE)
+);
+
+CREATE TABLE PEDIDOS(
+IDPEDIDO INT,
+NOMBRE VARCHAR(40),
+PRECIO DECIMAL(6,2),
+CONSTRAINT PK5 PRIMARY KEY (IDPEDIDO)
+);
+
+CREATE TABLE PEDIDOSCLIENTES(
+IDPEDIDOCLIENTE INT,
+FECHAPEDIDO DATE,
+IDPEDIDO INT,
+IDCLIENTE INT,
+CONSTRAINT PK6 PRIMARY KEY (IDPEDIDOCLIENTE),
+CONSTRAINT FK1 FOREIGN KEY (IDPEDIDO) REFERENCES PEDIDOS(IDPEDIDO),
+CONSTRAINT FK2 FOREIGN KEY (IDCLIENTE) REFERENCES CLIENTES(IDCLIENTE)
+);
+
+CREATE TABLE VENTAS(
+IDVENTAS INT,
+NOMBRE VARCHAR(40),
+PRECIO DECIMAL(6,2),
+IDPEDIDO INT,
+CONSTRAINT PK7 PRIMARY KEY (IDVENTAS),
+CONSTRAINT FK3 FOREIGN KEY (IDPEDIDO) REFERENCES PEDIDOS(IDPEDIDO)
+);
+
+CREATE TABLE PROVEEDOR(
+IDPROVEEDOR INT,
+NOMBRE VARCHAR(40),
+DNI CHAR(8),
+IDPEDIDO INT,
+CONSTRAINT PK8 PRIMARY KEY (IDPROVEEDOR),
+CONSTRAINT FK4 FOREIGN KEY (IDPEDIDO) REFERENCES PEDIDOS(IDPEDIDO)
+);
+
+CREATE TABLE PROVEEDORSEDE(
+IDPROVEEDORSEDE INT,
+COD INT,
+IDSEDE INT,
+IDPROVEEDOR INT,
+CONSTRAINT PK9 PRIMARY KEY (IDPROVEEDORSEDE),
+CONSTRAINT FK5 FOREIGN KEY (IDSEDE) REFERENCES SEDE(IDSEDE),
+CONSTRAINT FK6 FOREIGN KEY (IDPROVEEDOR) REFERENCES PROVEEDOR(IDPROVEEDOR)
+);
+
+CREATE TABLE INVENTARIOSEDE(
+IDINVENTARIOSEDE INT,
+COD INT,
+ESPECIALIZACION VARCHAR(20),
+IDSEDE INT,
+IDINVENTARIO INT,
+CONSTRAINT PK10 PRIMARY KEY (IDINVENTARIOSEDE),
+CONSTRAINT FK7 FOREIGN KEY (IDSEDE) REFERENCES SEDE(IDSEDE),
+CONSTRAINT FK8 FOREIGN KEY (IDINVENTARIO) REFERENCES INVENTARIO(IDINVENTARIO)
+);
+
+CREATE TABLE TRABAJADORINVENTARIO(
+IDTRABAJADORINVENTARIO INT,
+IDINVENTARIO INT,
+IDTRABAJADOR INT,
+CONSTRAINT PK11 PRIMARY KEY (IDTRABAJADORINVENTARIO),
+CONSTRAINT FK9 FOREIGN KEY (IDINVENTARIO) REFERENCES INVENTARIO(IDINVENTARIO),
+CONSTRAINT FK10 FOREIGN KEY (IDTRABAJADOR) REFERENCES TRABAJADOR(IDTRABAJADOR)
+
+);
+
+-- TRABAJADOR (30 registros)
+INSERT INTO TRABAJADOR (IDTRABAJADOR, NOMBRE, DNI, DIRECCION) VALUES
+(1, 'Juan Pérez', '12345678', 'Calle 1'),
+(2, 'María López', '23456789', 'Calle 2'),
+(3, 'Carlos Ramírez', '34567890', 'Calle 3'),
+(4, 'Ana Torres', '45678901', 'Calle 4'),
+(5, 'Luis Gómez', '56789012', 'Calle 5'),
+(6, 'Sofía Martínez', '67890123', 'Calle 6'),
+(7, 'Pedro Sánchez', '78901234', 'Calle 7'),
+(8, 'Laura Fernández', '89012345', 'Calle 8'),
+(9, 'Diego Ruiz', '90123456', 'Calle 9'),
+(10, 'Elena Vega', '01234567', 'Calle 10'),
+(11, 'Fernando Vargas', '12345670', 'Calle 11'),
+(12, 'Isabel Carrasco', '23456781', 'Calle 12'),
+(13, 'Miguel Morales', '34567892', 'Calle 13'),
+(14, 'Natalia Castro', '45678903', 'Calle 14'),
+(15, 'Ricardo Ortega', '56789014', 'Calle 15'),
+(16, 'Valeria Mendoza', '67890125', 'Calle 16'),
+(17, 'Andrés Guzmán', '78901236', 'Calle 17'),
+(18, 'Claudia Jiménez', '89012347', 'Calle 18'),
+(19, 'Hugo León', '90123458', 'Calle 19'),
+(20, 'Julia Navarro', '01234569', 'Calle 20'),
+(21, 'Kevin Suárez', '12345671', 'Calle 21'),
+(22, 'Lucía Paredes', '23456782', 'Calle 22'),
+(23, 'Oscar Quispe', '34567893', 'Calle 23'),
+(24, 'Patricia Ríos', '45678904', 'Calle 24'),
+(25, 'Samuel Solano', '56789015', 'Calle 25'),
+(26, 'Tatiana Valle', '67890126', 'Calle 26'),
+(27, 'Víctor Zamora', '78901237', 'Calle 27'),
+(28, 'Ximena Chávez', '89012348', 'Calle 28'),
+(29, 'Yuri Córdova', '90123459', 'Calle 29'),
+(30, 'Zoe Alvarado', '01234560', 'Calle 30');
+
+-- INVENTARIO (20 registros)
+INSERT INTO INVENTARIO (IDINVENTARIO, COD, ESTANTERIA, ALMACEN) VALUES
+(1, 101, 1, 1),
+(2, 102, 2, 1),
+(3, 103, 3, 1),
+(4, 104, 4, 1),
+(5, 105, 5, 1),
+(6, 106, 6, 1),
+(7, 107, 7, 1),
+(8, 108, 8, 1),
+(9, 109, 9, 1),
+(10, 110, 10, 1),
+(11, 111, 1, 2),
+(12, 112, 2, 2),
+(13, 113, 3, 2),
+(14, 114, 4, 2),
+(15, 115, 5, 2),
+(16, 116, 6, 2),
+(17, 117, 7, 2),
+(18, 118, 8, 2),
+(19, 119, 9, 2),
+(20, 120, 10, 2);
+
+-- SEDE (10 registros)
+INSERT INTO SEDE (IDSEDE, DIRECCION, ESPECIALIZACION) VALUES
+(1, 'Av. Principal 100', 'Electrónica'),
+(2, 'Av. Secundaria 200', 'Ropa'),
+(3, 'Calle Central 300', 'Hogar'),
+(4, 'Plaza Mayor 400', 'Deportes'),
+(5, 'Calle Norte 500', 'Libros'),
+(6, 'Avenida Sur 600', 'Joyería'),
+(7, 'Calle Este 700', 'Cosméticos'),
+(8, 'Avenida Oeste 800', 'Alimentos'),
+(9, 'Plaza Central 900', 'Infantil'),
+(10, 'Calle Industrial 1000', 'Automotriz');
+
+-- CLIENTES (30 registros)
+INSERT INTO CLIENTES (IDCLIENTE, DNI, APELLIDOS, NOMBRE) VALUES
+(1, '11111111', 'García', 'Ana'),
+(2, '22222222', 'Martínez', 'Luis'),
+(3, '33333333', 'Torres', 'Carlos'),
+(4, '44444444', 'Ramírez', 'Sofía'),
+(5, '55555555', 'Sánchez', 'Pedro'),
+(6, '66666666', 'Fernández', 'Laura'),
+(7, '77777777', 'Ruiz', 'Diego'),
+(8, '88888888', 'Vega', 'Elena'),
+(9, '99999999', 'Vargas', 'Fernando'),
+(10, '10101010', 'Carrasco', 'Isabel'),
+(11, '11121314', 'Morales', 'Miguel'),
+(12, '12131415', 'Castro', 'Natalia'),
+(13, '13141516', 'Ortega', 'Ricardo'),
+(14, '14151617', 'Mendoza', 'Valeria'),
+(15, '15161718', 'Guzmán', 'Andrés'),
+(16, '16171819', 'Jiménez', 'Claudia'),
+(17, '17181920', 'León', 'Hugo'),
+(18, '18192021', 'Navarro', 'Julia'),
+(19, '19202122', 'Suárez', 'Kevin'),
+(20, '20212223', 'Paredes', 'Lucía'),
+(21, '21222324', 'Quispe', 'Oscar'),
+(22, '22232425', 'Ríos', 'Patricia'),
+(23, '23242526', 'Solano', 'Samuel'),
+(24, '24252627', 'Valle', 'Tatiana'),
+(25, '25262728', 'Zamora', 'Víctor'),
+(26, '26272829', 'Chávez', 'Ximena'),
+(27, '27282930', 'Córdova', 'Yuri'),
+(28, '28293031', 'Alvarado', 'Zoe'),
+(29, '29303132', 'González', 'Alberto'),
+(30, '30313233', 'Flores', 'Beatriz');
+
+-- PEDIDOS (20 registros)
+INSERT INTO PEDIDOS (IDPEDIDO, NOMBRE, PRECIO) VALUES
+(1, 'Televisor', 500.00),
+(2, 'Camisa', 25.00),
+(3, 'Silla', 45.00),
+(4, 'Refrigerador', 800.00),
+(5, 'Zapatos', 60.00),
+(6, 'Audífonos', 30.00),
+(7, 'Libro', 15.00),
+(8, 'Reloj', 100.00),
+(9, 'Maleta', 70.00),
+(10, 'Mesa', 120.00),
+(11, 'Portátil', 1000.00),
+(12, 'Smartphone', 300.00),
+(13, 'Impresora', 150.00),
+(14, 'Cafetera', 50.00),
+(15, 'Bicicleta', 200.00),
+(16, 'Juguete', 20.00),
+(17, 'Blusa', 35.00),
+(18, 'Botas', 80.00),
+(19, 'Gorra', 10.00),
+(20, 'Película', 5.00);
+
+-- PEDIDOSCLIENTES (20 registros)
+INSERT INTO PEDIDOSCLIENTES (IDPEDIDOCLIENTE, FECHAPEDIDO, IDPEDIDO, IDCLIENTE) VALUES
+(1, '2023-01-01', 1, 1),
+(2, '2023-01-02', 2, 2),
+(3, '2023-01-03', 3, 3),
+(4, '2023-01-04', 4, 4),
+(5, '2023-01-05', 5, 5),
+(6, '2023-01-06', 6, 6),
+(7, '2023-01-07', 7, 7),
+(8, '2023-01-08', 8, 8),
+(9, '2023-01-09', 9, 9),
+(10, '2023-01-10', 10, 10),
+(11, '2023-01-11', 11, 11),
+(12, '2023-01-12', 12, 12),
+(13, '2023-01-13', 13, 13),
+(14, '2023-01-14', 14, 14),
+(15, '2023-01-15', 15, 15),
+(16, '2023-01-16', 16, 16),
+(17, '2023-01-17', 17, 17),
+(18, '2023-01-18', 18, 18),
+(19, '2023-01-19', 19, 19),
+(20, '2023-01-20', 20, 20);
+
+-- VENTAS (10 registros)
+INSERT INTO VENTAS (IDVENTAS, NOMBRE, PRECIO, IDPEDIDO) VALUES
+(1, 'Televisor', 500.00, 1),
+(2, 'Camisa', 25.00, 2),
+(3, 'Silla', 45.00, 3),
+(4, 'Refrigerador', 800.00, 4),
+(5, 'Zapatos', 60.00, 5),
+(6, 'Audífonos', 30.00, 6),
+(7, 'Libro', 15.00, 7),
+(8, 'Reloj', 100.00, 8),
+(9, 'Maleta', 70.00, 9),
+(10, 'Mesa', 120.00, 10);
+
+-- PROVEEDOR (10 registros)
+INSERT INTO PROVEEDOR (IDPROVEEDOR, NOMBRE, DNI, IDPEDIDO) VALUES
+(1, 'Proveedor A', '11111111', 1),
+(2, 'Proveedor B', '22222222', 2),
+(3, 'Proveedor C', '33333333', 3),
+(4, 'Proveedor D', '44444444', 4),
+(5, 'Proveedor E', '55555555', 5),
+(6, 'Proveedor F', '66666666', 6),
+(7, 'Proveedor G', '77777777', 7),
+(8, 'Proveedor H', '88888888', 8),
+(9, 'Proveedor I', '99999999', 9),
+(10, 'Proveedor J', '10101010', 10);
+
+-- PROVEEDORSEDE (10 registros)
+INSERT INTO PROVEEDORSEDE (IDPROVEEDORSEDE, COD, IDSEDE, IDPROVEEDOR) VALUES
+(1, 101, 1, 1),
+(2, 102, 2, 2),
+(3, 103, 3, 3),
+(4, 104, 4, 4),
+(5, 105, 5, 5),
+(6, 106, 6, 6),
+(7, 107, 7, 7),
+(8, 108, 8, 8),
+(9, 109, 9, 9),
+(10, 110, 10, 10);
+
+-- INVENTARIOSEDE (10 registros)
+INSERT INTO INVENTARIOSEDE (IDINVENTARIOSEDE, COD, ESPECIALIZACION, IDSEDE, IDINVENTARIO) VALUES
+(1, 101, 'Electrónica', 1, 1),
+(2, 102, 'Ropa', 2, 2),
+(3, 103, 'Hogar', 3, 3),
+(4, 104, 'Deportes', 4, 4),
+(5, 105, 'Libros', 5, 5),
+(6, 106, 'Joyería', 6, 6),
+(7, 107, 'Cosméticos', 7, 7),
+(8, 108, 'Alimentos', 8, 8),
+(9, 109, 'Infantil', 9, 9),
+(10, 110, 'Automotriz', 10, 10);
+
+-- TRABAJADORINVENTARIO (10 registros)
+INSERT INTO TRABAJADORINVENTARIO (IDTRABAJADORINVENTARIO, IDINVENTARIO, IDTRABAJADOR) VALUES
+(1, 1, 1),
+(2, 2, 2),
+(3, 3, 3),
+(4, 4, 4),
+(5, 5, 5),
+(6, 6, 6),
+(7, 7, 7),
+(8, 8, 8),
+(9, 9, 9),
+(10, 10, 10);
+
+-- UPDATES
+-- --------------------------------- 
+
+-- 1. Actualizar el precio de un pedido específico
+UPDATE PEDIDOS
+SET PRECIO = 550.00
+WHERE IDPEDIDO = 1;
+
+-- 2. Modificar la dirección de un trabajador
+UPDATE TRABAJADOR
+SET DIRECCION = 'Calle Nueva 123'
+WHERE IDTRABAJADOR = 5;
+
+-- 3. Cambiar la especialización de una sede
+UPDATE SEDE
+SET ESPECIALIZACION = 'Tecnología'
+WHERE IDSEDE = 1;
+
+-- 4. Actualizar el nombre de un cliente
+UPDATE CLIENTES
+SET NOMBRE = 'Ana María'
+WHERE IDCLIENTE = 1;
+
+-- 5. Modificar el stock de un artículo en inventario
+UPDATE INVENTARIO
+SET ESTANTERIA = 12
+WHERE IDINVENTARIO = 1;
+
+-- 6. Ajustar el precio de una venta
+UPDATE VENTAS
+SET PRECIO = 480.00
+WHERE IDVENTAS = 1;
+
+-- 7. Cambiar el proveedor asignado a un pedido
+UPDATE PROVEEDOR
+SET IDPEDIDO = 11
+WHERE IDPROVEEDOR = 1;
+
+-- 8. Modificar la especialización de un inventario en una sede
+UPDATE INVENTARIOSEDE
+SET ESPECIALIZACION = 'Electrónica Avanzada'
+WHERE IDINVENTARIOSEDE = 1;
+
+-- 9. Asignar un nuevo trabajador a un inventario
+UPDATE TRABAJADORINVENTARIO
+SET IDTRABAJADOR = 15
+WHERE IDTRABAJADORINVENTARIO = 1;
+
+-- 10. Actualizar el código de un proveedor en una sede
+UPDATE PROVEEDORSEDE
+SET COD = 201
+WHERE IDPROVEEDORSEDE = 1;
+
+-- SELECTS
+-- -----------------------------------
+
+-- 1. Mostrar todos los pedidos realizados por un cliente específico
+SELECT P.IDPEDIDO, P.NOMBRE, P.PRECIO
+FROM PEDIDOS P
+JOIN PEDIDOSCLIENTES PC ON P.IDPEDIDO = PC.IDPEDIDO
+WHERE PC.IDCLIENTE = 1;
+
+-- 2. Listar todos los trabajadores y sus direcciones
+SELECT IDTRABAJADOR, NOMBRE, DIRECCION
+FROM TRABAJADOR;
+
+-- 3. Obtener el total de ventas por cada pedido
+SELECT V.IDPEDIDO, SUM(V.PRECIO) AS TOTAL_VENTAS
+FROM VENTAS V
+GROUP BY V.IDPEDIDO;
+
+-- 4. Obtener los clientes que han realizado pedidos, mostrando su nombre y el pedido realizado:
+SELECT C.NOMBRE, P.NOMBRE AS PEDIDO
+FROM CLIENTES C
+JOIN PEDIDOSCLIENTES PC ON C.IDCLIENTE = PC.IDCLIENTE
+JOIN PEDIDOS P ON PC.IDPEDIDO = P.IDPEDIDO;
+
+-- 5. Mostrar los clientes que realizaron pedidos en enero de 2023
+SELECT C.IDCLIENTE, C.NOMBRE, C.APELLIDOS
+FROM CLIENTES C
+JOIN PEDIDOSCLIENTES PC ON C.IDCLIENTE = PC.IDCLIENTE
+WHERE MONTH(PC.FECHAPEDIDO) = 1 AND YEAR(PC.FECHAPEDIDO) = 2023;
+
+-- 6. Listar los productos en inventario del almacén 1
+SELECT I.IDINVENTARIO, I.COD, I.ESTANTERIA
+FROM INVENTARIO I
+WHERE I.ALMACEN = 1;
+
+-- 7. Obtener el proveedor asignado a un pedido específico
+SELECT PR.IDPROVEEDOR, PR.NOMBRE
+FROM PROVEEDOR PR
+WHERE PR.IDPEDIDO = 5;
+
+-- 8. Mostrar las sedes con especialización en alimentos
+SELECT IDSEDE, DIRECCION
+FROM SEDE
+WHERE ESPECIALIZACION = 'Alimentos';
+
+-- 9. Obtener los trabajadores responsables de un inventario específico
+SELECT T.IDTRABAJADOR, T.NOMBRE
+FROM TRABAJADOR T
+JOIN TRABAJADORINVENTARIO TI ON T.IDTRABAJADOR = TI.IDTRABAJADOR
+WHERE TI.IDINVENTARIO = 3;
+
+-- 10. Mostrar los proveedores asociados a una sede específica
+SELECT PR.IDPROVEEDOR, PR.NOMBRE
+FROM PROVEEDOR PR
+JOIN PROVEEDORSEDE PS ON PR.IDPROVEEDOR = PS.IDPROVEEDOR
+WHERE PS.IDSEDE = 2;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- 1 PRODUCTO, PROVEEDOR, FECHA_PEDIDO, PRECIO 
+-- SELECT  P.NOMBRE AS PRODUCTO, PR.NOMBRE AS PROVEEDOR, PC.FECHAPEDIDO, V.PRECIO AS PRECIO_VENTA FROM PEDIDOS P
+-- JOIN PROVEEDOR PR ON PR.IDPEDIDO = P.IDPEDIDO 
+-- JOIN PEDIDOSCLIENTES PC ON P.IDPEDIDO = PC.IDPEDIDO
+-- JOIN VENTAS V ON P.IDPEDIDO = V.IDPEDIDO;
+
+--  2 nombre, dni (trabajador) + idinventario
+-- SELECT TI.IDTRABAJADORINVENTARIO, T.NOMBRE, T.DNI, T.DIRECCION FROM TRABAJADOR T
+-- JOIN TRABAJADORINVENTARIO TI ON T.IDTRABAJADOR = TI.IDTRABAJADOR;
+
+
+-- 3 ESPECIALIZACION, CODIGO, ESTANTERIA, ALMACEN 
+-- SELECT S.ESPECIALIZACION, PS.COD, I.ESTANTERIA, I.ALMACEN FROM SEDE S
+-- JOIN PROVEEDORSEDE PS ON S.IDSEDE = PS.IDSEDE
+-- JOIN INVENTARIOSEDE I_S ON I_S.IDSEDE = S.IDSEDE
+-- JOIN INVENTARIO I ON I_S.IDINVENTARIO = I.IDINVENTARIO; 
+
+
+--
+ 
+
+
+
+
